@@ -65,6 +65,27 @@ To decide whether a page is a checkout page, it looks at:
   field in a cross-origin frame the extension cannot see into at all.
 - The page's own hostname, to work out which store you are on.
 
+To work out **what kind of business** a site is when the hostname does not
+say — `momofuku.com` gives nothing away, and no keyword list will ever tell
+you it is a restaurant — it also looks at the description the page publishes
+about itself for search engines and link previews:
+
+- The `@type` labels inside the page's schema.org `application/ld+json`
+  blocks (`Restaurant`, `Hotel`, `Pharmacy`, and similar). **Only the type
+  labels.** Everything else in the block is walked past and discarded, which
+  matters on a checkout page, where such a block can also hold an order
+  total or a name.
+- The page's Open Graph `og:type`, the same one-word label that decides how
+  a link to the page looks when it is shared.
+- The hostnames — not the contents — of the scripts, frames and stylesheets
+  the page loads from elsewhere, checked against a short list of restaurant
+  ordering and hotel booking platforms (Toast, ChowNow, OpenTable, Resy and
+  similar). A restaurant with a plain domain name almost always embeds one.
+
+All three are metadata a page publishes deliberately, for anyone to read.
+None of it is the page's visible content, none of it is stored, and like
+everything else here, none of it leaves your browser.
+
 ## What it does not read
 
 - **It never reads a field's value.** Not the card number, not the CVC, not
@@ -77,7 +98,10 @@ To decide whether a page is a checkout page, it looks at:
 - **It makes no network requests.** The card database and the ranking engine
   are bundled into the extension itself, so it works fully offline. There is
   nowhere for your data to go.
-- **It does not read page content**, cookies, passwords, or anything you type.
+- **It does not read page content**, cookies, passwords, or anything you
+  type. The metadata described above is the page's own machine-readable
+  description of itself, published for search engines — not the text,
+  images, prices or order details a person sees on the page.
 - **It cannot change what you pay with.** It shows a recommendation; choosing
   the card is always yours.
 
